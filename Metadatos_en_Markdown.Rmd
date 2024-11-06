@@ -1,0 +1,15 @@
+---
+title: "Metadatos_en_Markdown"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+```{r}
+library(readr)
+DataInfo_S013 <- read_csv("Desktop/metaboData-main/Datasets/2018-MetabotypingPaper/DataInfo_S013.csv")
+View(DataInfo_S013)
+```
+```{r}
+DataInfo_S013
+```
+

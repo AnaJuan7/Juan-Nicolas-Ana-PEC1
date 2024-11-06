@@ -1,0 +1,121 @@
+---
+title: "PEC1_ADO"
+output:
+  pdf_document: default
+  word_document: default
+date: "2024-11-04"
+---
+
+###PEC1_ADO
+
+##Ejercicio 1
+
+#Instalamos bioconductor y SummarizedExperiment
+
+```{r install-packages}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("SummarizedExperiment")
+```
+
+
+
+
+```{r}
+BiocManager::install("SummarizedExperiment")
+```
+
+#Librerias
+```{r cars}
+library(readr)
+library(SummarizedExperiment)
+```
+
+#Introducimos los datos
+```{r}
+library(readr)
+DataInfo_S013 <- read_csv("Desktop/metaboData-main/Datasets/2018-MetabotypingPaper/DataInfo_S013.csv")
+View(DataInfo_S013)
+```
+```{r}
+library(readr)
+DataValues_S013 <- read_csv("Desktop/metaboData-main/Datasets/2018-MetabotypingPaper/DataValues_S013.csv")
+View(DataValues_S013)
+```
+
+#Asignamos nombre a las dos bases con las que vamos a trabajar
+```{r}
+data_info <- DataInfo_S013
+data_values <- DataValues_S013
+```
+
+#Fijamos semilla (hacemos una prueba)
+```{r}
+set.seed(123456)
+seleccion <- sample(1:nrow(data_values), 1) 
+Indice <- data_values[seleccion, 1] 
+ColumnaSujeto <- data_values[seleccion, 2]
+print(seleccion)
+print(Columna...1)
+print(ColumnaSujeto)
+```
+
+
+##Ejercicio 2
+
+#Hacemos dataframe de columnas. Como nos ha dado problemas con la longitud de las columnas de datos (al intentar crear después el SummarizedExperiment), escogemos una columna que sabemos que tiene el número correcto, y además escogemos la función lenght.out para indicar el  número de elementos que necesitamos que será =counts. 
+```{r}
+colData <- DataFrame(
+  Col = rep(data_info$...1, length.out = ncol(counts)),  
+  row.names = colnames(counts)  
+)
+print(colData)
+```
+#Hacemos dataframe de líneas, en este caso escogemos dos filas aleatorias. 
+```{r}
+rowData <- DataFrame(
+  AGE = data_values$AGE,
+  Surgery = as.factor(data_values$SURGERY)
+
+)
+print(rowData)
+```
+#Ejecutamos la función Summarized Experiment para juntar las dos dataframe construidas anteriormente. 
+```{r}
+se <- SummarizedExperiment(
+  assays = list(counts = counts),
+  colData = colData,
+  rowData = rowData
+)
+```
+
+#Recogemos la información de nuestra SummarizedExperiment. 
+```{r}
+print(se)
+```
+#Mostramos los datos del SummarizedExperiment. Ha sido posible crear la matriz pero los nombres de las filas y columnas no aparecen, aparecen como 1,2,3,4 y 5. A pesar de que en rowData y colData aparecían bien. He intentado solucionarlo pero no he podido.
+
+```{r}
+assays(se)[[1]][1:5, 1:5]
+```
+
+
+```{r}
+summary(se)
+```
+
+
+
+NOTAS: Siguiendo el tutorial proporcionado, no había manera de contruir el SummarizedExpression. Tenía muchos problemas al montar el número de filar y columnas así que he tenido que recurrir a otros tutoriales y vídeos que me permitieran más información. Dejo la bibliografía abajo.
+
+BB
+https://www.youtube.com/watch?v=D8IVRmbMjyc
+https://www.bioconductor.org/help/course-materials/2019/BSS2019/04_Practical_CoreApproachesInBioconductor.html
+
+```{r}
+install.packages("knitr")
+```
+
+
+
+
