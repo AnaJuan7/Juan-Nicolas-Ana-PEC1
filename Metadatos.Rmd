@@ -1,0 +1,85 @@
+---
+title: "PEC_OMICAS"
+output: pdf_document
+date: "2024-11-07"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("SummarizedExperiment")
+```
+
+```{r}
+if (!requireNamespace("S4Vectors", quietly = TRUE)) {
+    install.packages("BiocManager")
+    BiocManager::install("S4Vectors")
+}
+```
+
+```{r}
+library(S4Vectors)
+```
+
+
+```{r}
+library(readr)
+DataInfo_S013 <- read_csv("DataInfo_S013.csv")
+View(DataInfo_S013)
+```
+```{r}
+head(DataInfo_S013)
+```
+
+```{r}
+library(readr)
+DataValues_S013 <- read_csv("DataValues_S013.csv")
+View(DataValues_S013)
+```
+
+```{r}
+head(DataValues_S013)
+```
+
+```{r}
+data_matrix <- as.matrix(DataValues_S013[1:10, c("GLU_T0", "INS_T0", "HOMA_T0")])
+colData <- DataFrame(
+  Condition = c("GLU_T0", "INS_T0", "HOMA_T0"),
+  row.names = colnames(data_matrix)
+)
+rowData <- DataFrame(
+  Subject = DataValues_S013$SUBJECTS[1:10],
+  Surgery = as.factor(DataValues_S013$SURGERY[1:10]),
+  row.names = rownames(data_matrix))
+library(SummarizedExperiment)
+se <- SummarizedExperiment(
+  assays = list(counts = data_matrix),
+  colData = colData,
+  rowData = rowData
+)
+print(se)
+```
+
+
+
+
+```{r}
+assays(se)$counts
+
+```
+
+```{r}
+colData(se)
+se[, se$dex == "trt"]
+
+```
+
+
+
